@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTech - Economia Sustentável</title>
+  <h2>André Luiz Brito Santiago</h2>
+  <h5>RGM: 4150720</h5>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f3f8f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 1.5em;
+      font-size: 1.5em;
+    }
+    nav {
+      background-color: #388e3c;
+      display: flex;
+      justify-content: center;
+      gap: 2em;
+      padding: 0.7em;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2em auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 2em;
+    }
+    h2 {
+      color: #2e7d32;
+    }
+    button {
+      background-color: #43a047;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover {
+      background-color: #388e3c;
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 80%;
+      margin-bottom: 10px;
+    }
+    #quiz-container button {
+      display: block;
+      margin: 8px 0;
+      width: 100%;
+    }
+    .hidden {
+      display: none;
+    }
+    footer {
+      text-align: center;
+      background-color: #2e7d32;
+      color: white;
+      padding: 1em;
+      margin-top: 2em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    🌿 EcoTech – Economia Sustentável
+  </header>
+
+  <nav>
+    <a href="#login">Início</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#dicas">Dicas</a>
+  </nav>
+
+  <div class="container" id="login">
+    <h2>Bem-vindo(a) ao EcoTech!</h2>
+    <p>Insira seu nome para começar:</p>
+    <input type="text" id="nomeUsuario" placeholder="Digite seu nome">
+    <button onclick="iniciarQuiz()">Iniciar Quiz</button>
+  </div>
+
+  <div class="container hidden" id="quiz">
+    <h2>Quiz Sustentável</h2>
+    <p id="usuarioSaudacao"></p>
+    <div id="quiz-container"></div>
+    <p id="resultado"></p>
+    <button onclick="reiniciarQuiz()">🔁 Reiniciar Quiz</button>
+    <button onclick="novoUsuario()">👤 Novo Usuário</button>
+  </div>
+
+  <div class="container hidden" id="dicas">
+    <h2>Dicas de Sustentabilidade</h2>
+    <ul>
+      <li>🌎 Utilize sacolas reutilizáveis ao fazer compras.</li>
+      <li>💧 Economize água e energia no dia a dia.</li>
+      <li>🚴 Prefira meios de transporte sustentáveis.</li>
+      <li>♻️ Separe o lixo para reciclagem.</li>
+      <li>🌱 Apoie empresas com práticas ecológicas.</li>
+    </ul>
+  </div>
+
+  <footer>
+    Projeto de Extensão – ADS | Desenvolvido pelo aluno André Santiago para um futuro mais verde 💚
+  </footer>
+
+  <script>
+    const perguntas = [
+      {
+        pergunta: 'Qual destas ações mais contribui para a economia sustentável?',
+        opcoes: ['Consumir mais produtos plásticos', 'Reutilizar materiais', 'Ignorar a reciclagem'],
+        correta: 1
+      },
+      {
+        pergunta: 'Qual é uma prática sustentável no ambiente de trabalho?',
+        opcoes: ['Deixar luzes acesas o dia todo', 'Evitar desperdício de papel', 'Usar copos descartáveis'],
+        correta: 1
+      },
+      {
+        pergunta: 'O que significa economia circular?',
+        opcoes: ['Produzir, usar e descartar', 'Reciclar e reaproveitar recursos', 'Produzir sem controle'],
+        correta: 1
+      }
+    ];
+
+    let indiceAtual = 0;
+    let pontuacao = 0;
+    let nome = '';
+
+    function iniciarQuiz() {
+      const inputNome = document.getElementById('nomeUsuario');
+      nome = inputNome.value.trim();
+      if (nome === '') {
+        alert('Por favor, insira seu nome para começar.');
+        return;
+      }
+      document.getElementById('login').classList.add('hidden');
+      document.getElementById('quiz').classList.remove('hidden');
+      document.getElementById('usuarioSaudacao').innerText = `Olá, ${nome}! Vamos testar seus conhecimentos sobre sustentabilidade?`;
+      mostrarPergunta();
+    }
+
+    function mostrarPergunta() {
+      const container = document.getElementById('quiz-container');
+      const perguntaAtual = perguntas[indiceAtual];
+
+      container.innerHTML = `
+        <p><strong>${indiceAtual + 1}. ${perguntaAtual.pergunta}</strong></p>
+        ${perguntaAtual.opcoes.map((opcao, i) => `<button onclick=\"responder(${i})\">${opcao}</button>`).join('')}
+      `;
+    }
+
+    function responder(opcaoSelecionada) {
+      const perguntaAtual = perguntas[indiceAtual];
+      if (opcaoSelecionada === perguntaAtual.correta) {
+        pontuacao++;
+      }
+
+      indiceAtual++;
+      if (indiceAtual < perguntas.length) {
+        mostrarPergunta();
+      } else {
+        mostrarResultado();
+      }
+    }
+
+    function mostrarResultado() {
+      const resultado = document.getElementById('resultado');
+      const total = perguntas.length;
+      const percentual = Math.round((pontuacao / total) * 100);
+      resultado.innerHTML = `🎉 ${nome}, você acertou ${pontuacao} de ${total} perguntas (${percentual}%).<br><br>`;
+      if (percentual >= 70) {
+        resultado.innerHTML += 'Excelente! Você está contribuindo para um mundo mais sustentável. 🌎';
+      } else {
+        resultado.innerHTML += 'Continue aprendendo e praticando ações sustentáveis! 💪';
+      }
+      document.getElementById('quiz-container').innerHTML = '';
+      document.getElementById('dicas').classList.remove('hidden');
+    }
+
+    function reiniciarQuiz() {
+      indiceAtual = 0;
+      pontuacao = 0;
+      document.getElementById('resultado').innerHTML = '';
+      document.getElementById('dicas').classList.add('hidden');
+      mostrarPergunta();
+    }
+
+    function novoUsuario() {
+      indiceAtual = 0;
+      pontuacao = 0;
+      nome = '';
+      document.getElementById('resultado').innerHTML = '';
+      document.getElementById('quiz').classList.add('hidden');
+      document.getElementById('dicas').classList.add('hidden');
+      document.getElementById('login').classList.remove('hidden');
+      document.getElementById('nomeUsuario').value = '';
+    }
+  </script>
+</body>
+</html>
